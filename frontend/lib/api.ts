@@ -60,7 +60,8 @@ class ApiClient {
   async getPokemonList(
     offset: number = 0,
     limit: number = 20,
-    query?: string
+    query?: string,
+    sortBy?: "id" | "name"
   ): Promise<PokemonListResponse> {
     const params = new URLSearchParams({
       offset: offset.toString(),
@@ -68,6 +69,9 @@ class ApiClient {
     });
     if (query) {
       params.append("query", query);
+    }
+    if (sortBy) {
+      params.append("sort_by", sortBy);
     }
 
     const response = await fetch(`${this.baseUrl}/pokemon?${params}`, {

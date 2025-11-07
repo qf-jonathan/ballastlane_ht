@@ -9,6 +9,12 @@
   gap: 16px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.controls > *:first-child {
+  flex: 1;
+  min-width: 200px;
 }
 
 .grid {

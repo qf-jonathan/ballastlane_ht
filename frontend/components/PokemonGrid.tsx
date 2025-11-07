@@ -4,6 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { usePokemonStore } from "@/stores/pokemonStore";
 import PokemonCard from "./PokemonCard";
 import SearchBar from "./SearchBar";
+import SortDropdown from "./SortDropdown";
 import styles from "./PokemonGrid.module.css";
 
 export default function PokemonGrid() {
@@ -14,7 +15,9 @@ export default function PokemonGrid() {
     hasMore,
     fetchPokemonList,
     setSearchQuery,
+    setSortBy,
     searchQuery,
+    sortBy,
   } = usePokemonStore();
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -22,13 +25,20 @@ export default function PokemonGrid() {
 
   useEffect(() => {
     fetchPokemonList(true);
-  }, [searchQuery]);
+  }, [searchQuery, sortBy]);
 
   const handleSearch = useCallback(
     (query: string) => {
       setSearchQuery(query);
     },
     [setSearchQuery]
+  );
+
+  const handleSortChange = useCallback(
+    (newSortBy: "id" | "name") => {
+      setSortBy(newSortBy);
+    },
+    [setSortBy]
   );
 
   useEffect(() => {
@@ -58,6 +68,7 @@ export default function PokemonGrid() {
     <div className={styles.container}>
       <div className={styles.controls}>
         <SearchBar onSearch={handleSearch} />
+        <SortDropdown value={sortBy} onChange={handleSortChange} />
       </div>
 
       {error && <div className={styles.error}>{error}</div>}

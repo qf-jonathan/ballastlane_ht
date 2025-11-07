@@ -107,6 +107,7 @@ frontend/
 
 ### Pokémon Features
 - **Search**: Real-time search with 300ms debounce
+- **Sorting**: Sort Pokémon by ID (number) or name alphabetically
 - **Infinite Scroll**: Automatically loads next page when scrolling to bottom
 - **Details Page**: Click any Pokémon to see detailed stats, abilities, and information
 - **Type-based Styling**: Each Pokémon card and detail page uses colors matching its primary type

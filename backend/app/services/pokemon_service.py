@@ -11,7 +11,7 @@ class PokemonService:
 
     @staticmethod
     async def get_pokemon_list(
-        offset: int = 0, limit: int = 20
+        offset: int = 0, limit: int = 20, sort_by: str = "id"
     ) -> PokemonListResponse:
         """
         Get paginated list of Pokemon from database.
@@ -19,6 +19,7 @@ class PokemonService:
         Args:
             offset: Number of Pokemon to skip
             limit: Number of Pokemon to return
+            sort_by: Field to sort by ('id' or 'name')
 
         Returns:
             PokemonListResponse with paginated results
@@ -27,8 +28,8 @@ class PokemonService:
             # Get total count
             total_count = await Pokemon.all().count()
 
-            # Get paginated results
-            pokemon_list = await Pokemon.all().offset(offset).limit(limit).order_by("id")
+            # Get paginated results with sorting
+            pokemon_list = await Pokemon.all().offset(offset).limit(limit).order_by(sort_by)
 
             # Build results
             results = [
@@ -123,7 +124,7 @@ class PokemonService:
 
     @staticmethod
     async def search_pokemon(
-        query: str, offset: int = 0, limit: int = 20
+        query: str, offset: int = 0, limit: int = 20, sort_by: str = "id"
     ) -> PokemonListResponse:
         """
         Search for Pokemon by name or ID with pagination using database.
@@ -132,6 +133,7 @@ class PokemonService:
             query: Search query (name or ID)
             offset: Number of results to skip
             limit: Number of results to return
+            sort_by: Field to sort by ('id' or 'name')
 
         Returns:
             PokemonListResponse with filtered and paginated results
@@ -162,12 +164,12 @@ class PokemonService:
             # Get total count of matching Pokemon
             total_count = await Pokemon.filter(name__icontains=query_lower).count()
 
-            # Get paginated results
+            # Get paginated results with sorting
             matching_pokemon = (
                 await Pokemon.filter(name__icontains=query_lower)
                 .offset(offset)
                 .limit(limit)
-                .order_by("id")
+                .order_by(sort_by)
             )
 
             # Build results

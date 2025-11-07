@@ -10,11 +10,11 @@ interface PokemonState {
   hasMore: boolean;
   offset: number;
   searchQuery: string;
-  sortBy: "number" | "name";
+  sortBy: "id" | "name";
   fetchPokemonList: (reset?: boolean) => Promise<void>;
   fetchPokemonDetails: (nameOrId: string) => Promise<void>;
   setSearchQuery: (query: string) => void;
-  setSortBy: (sortBy: "number" | "name") => void;
+  setSortBy: (sortBy: "id" | "name") => void;
   reset: () => void;
 }
 
@@ -26,10 +26,10 @@ export const usePokemonStore = create<PokemonState>((set, get) => ({
   hasMore: true,
   offset: 0,
   searchQuery: "",
-  sortBy: "number",
+  sortBy: "id",
 
   fetchPokemonList: async (reset = false) => {
-    const { offset, searchQuery, pokemonList, isLoading } = get();
+    const { offset, searchQuery, sortBy, pokemonList, isLoading } = get();
 
     if (isLoading) return;
 
@@ -41,7 +41,8 @@ export const usePokemonStore = create<PokemonState>((set, get) => ({
       const response = await apiClient.getPokemonList(
         currentOffset,
         20,
-        searchQuery || undefined
+        searchQuery || undefined,
+        sortBy
       );
 
       const newList = reset ? response.results : [...pokemonList, ...response.results];
@@ -75,8 +76,8 @@ export const usePokemonStore = create<PokemonState>((set, get) => ({
     set({ searchQuery: query, offset: 0, pokemonList: [] });
   },
 
-  setSortBy: (sortBy: "number" | "name") => {
-    set({ sortBy });
+  setSortBy: (sortBy: "id" | "name") => {
+    set({ sortBy, offset: 0, pokemonList: [] });
   },
 
   reset: () => {

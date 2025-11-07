@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Literal, Optional
 
 from fastapi import APIRouter, Query
 
@@ -15,6 +15,9 @@ async def get_pokemon_list(
     ),
     offset: int = Query(0, ge=0, description="Number of Pokemon to skip"),
     limit: int = Query(20, ge=1, le=100, description="Number of Pokemon to return"),
+    sort_by: Literal["id", "name"] = Query(
+        "id", description="Sort Pokemon by ID or name"
+    ),
 ):
     """
     Get a paginated list of Pokemon from PokeAPI, with optional search/filter.
@@ -23,15 +26,18 @@ async def get_pokemon_list(
         query: Optional search query to filter by name or ID
         offset: Number of Pokemon to skip (default: 0)
         limit: Number of Pokemon to return (default: 20, max: 100)
+        sort_by: Sort by 'id' or 'name' (default: 'id')
 
     Returns:
         Paginated list of Pokemon with name and URL
     """
     if query:
         return await PokemonService.search_pokemon(
-            query=query, offset=offset, limit=limit
+            query=query, offset=offset, limit=limit, sort_by=sort_by
         )
-    return await PokemonService.get_pokemon_list(offset=offset, limit=limit)
+    return await PokemonService.get_pokemon_list(
+        offset=offset, limit=limit, sort_by=sort_by
+    )
 
 
 @router.get("/{name_or_id}", response_model=PokemonDetails)
