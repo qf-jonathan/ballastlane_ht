@@ -94,6 +94,7 @@ export interface PokemonStat {
 export interface PokemonDetails {
   id: number;
   name: string;
+  description: string | null;
   sprite: string | null;
   height: number;
   weight: number;

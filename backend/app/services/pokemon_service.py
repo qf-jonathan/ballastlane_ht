@@ -37,6 +37,7 @@ class PokemonService:
             pokemon_data = {
                 "id": pokemon.id,
                 "name": pokemon.name,
+                "description": pokemon.description,
                 "sprite": pokemon.sprite_official_artwork or pokemon.sprite_front_default,
                 "sprites": {
                     "front_default": pokemon.sprite_front_default,

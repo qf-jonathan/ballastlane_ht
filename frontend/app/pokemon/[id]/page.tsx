@@ -19,8 +19,8 @@ export default function PokemonDetailsPage() {
 
   useEffect(() => {
     // Only redirect if auth check is complete and user is not authenticated
-    if (!authLoading && !isAuthenticated) {
-      // router.push("/login");
+    if (!isAuthenticated) {
+      router.push("/login");
       return;
     }
 
@@ -114,6 +114,10 @@ export default function PokemonDetailsPage() {
             <TypeChip key={typeSlot.type.name} type={typeSlot.type.name} />
           ))}
         </div>
+
+        {currentPokemon.description && (
+          <p className={styles.description}>{currentPokemon.description}</p>
+        )}
 
         <section className={styles.section}>
           <h2

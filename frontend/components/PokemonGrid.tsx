@@ -67,8 +67,10 @@ export default function PokemonGrid() {
   return (
     <div className={styles.container}>
       <div className={styles.controls}>
-        <SearchBar onSearch={handleSearch} />
-        <SortDropdown value={sortBy} onChange={handleSortChange} />
+        <div className={styles.controlsWrapper}>
+          <SearchBar onSearch={handleSearch} />
+          <SortDropdown value={sortBy} onChange={handleSortChange} />
+        </div>
       </div>
 
       {error && <div className={styles.error}>{error}</div>}

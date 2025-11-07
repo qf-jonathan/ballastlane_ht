@@ -2,9 +2,10 @@
   background-color: var(--color-primary-red);
   color: var(--color-white);
   padding: 16px 0;
-  box-shadow: var(--shadow-2dp);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
 }
 

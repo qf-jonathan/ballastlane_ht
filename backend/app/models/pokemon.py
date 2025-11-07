@@ -9,6 +9,7 @@ class Pokemon(Model):
     name = fields.CharField(max_length=100, unique=True, index=True)
     height = fields.IntField()
     weight = fields.IntField()
+    description = fields.TextField(null=True)  # Pokemon description from species
     sprite_front_default = fields.CharField(max_length=500, null=True)
     sprite_official_artwork = fields.CharField(max_length=500, null=True)
     # Store types, abilities, and stats as JSON fields

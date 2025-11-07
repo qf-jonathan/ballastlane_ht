@@ -89,6 +89,7 @@ class PokemonDetails(BaseModel):
 
     id: int
     name: str
+    description: str | None  # Pokemon description from species
     sprite: str | None  # Primary sprite (same as list view)
     sprites: PokemonSprites
     types: List[PokemonTypeSlot]
