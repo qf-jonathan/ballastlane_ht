@@ -115,10 +115,6 @@ export default function PokemonDetailsPage() {
           ))}
         </div>
 
-        {currentPokemon.description && (
-          <p className={styles.description}>{currentPokemon.description}</p>
-        )}
-
         <section className={styles.section}>
           <h2
             className={styles.sectionTitle}
@@ -128,27 +124,33 @@ export default function PokemonDetailsPage() {
           </h2>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Height</span>
               <span className={styles.infoValue}>
                 {(currentPokemon.height / 10).toFixed(1)} m
               </span>
+              <span className={styles.infoLabel}>Height</span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Weight</span>
               <span className={styles.infoValue}>
                 {(currentPokemon.weight / 10).toFixed(1)} kg
               </span>
+              <span className={styles.infoLabel}>Weight</span>
             </div>
             <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>Abilities</span>
               <span className={styles.infoValue}>
                 {currentPokemon.abilities
                   .filter((a) => !a.is_hidden)
                   .map((a) => a.ability.name)
                   .join(", ")}
               </span>
+              <span className={styles.infoLabel}>Abilities</span>
             </div>
           </div>
+        </section>
+
+        <section>
+          {currentPokemon.description && (
+            <p className={styles.description}>{currentPokemon.description}</p>
+          )}
         </section>
 
         <section className={styles.section}>
@@ -168,7 +170,7 @@ export default function PokemonDetailsPage() {
 
               return (
                 <div key={stat.stat.name} className={styles.statRow}>
-                  <span className={styles.statName}>{statName}</span>
+                  <span className={styles.statName} style={{ color: `var(${typeColorVar})` }}>{statName}</span>
                   <span className={styles.statValue}>{stat.base_stat}</span>
                   <div className={styles.statBarContainer}>
                     <div

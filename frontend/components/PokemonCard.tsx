@@ -18,18 +18,21 @@ export default function PokemonCard({ pokemon }: PokemonCardProps) {
       <div className={styles.cardInner} data-type={primaryType}>
         <div className={styles.number}>#{String(pokemon.id).padStart(3, "0")}</div>
         <div className={styles.imageContainer}>
+          <div className={styles.ground}>
+            <h3 className={styles.name}>{pokemon.name}</h3>
+          </div>
           <img
             src={imageUrl}
             alt={pokemon.name}
             className={styles.image}
           />
         </div>
-        <h3 className={styles.name}>{pokemon.name}</h3>
-        <div className={styles.types}>
+        
+        {/* <div className={styles.types}>
           {pokemon.types.map((type) => (
             <TypeChip key={type} type={type as PokemonType} />
           ))}
-        </div>
+        </div> */}
       </div>
     </Link>
   );

@@ -57,7 +57,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
 }
 
 .image {
@@ -65,13 +64,15 @@
   max-width: 300px;
   height: auto;
   filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  transform: translateY(100px);
+  z-index: 1;
 }
 
 .content {
   background-color: var(--color-white);
   border-radius: 24px 24px 0 0;
   margin-top: -24px;
-  padding: 32px 24px;
+  padding: 100px 24px 24px 24px !important;
   position: relative;
 }
 
@@ -106,9 +107,7 @@
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
   max-width: 600px;
-  margin: 0 auto;
 }
 
 .infoItem {
@@ -117,8 +116,10 @@
   align-items: center;
   gap: 8px;
   padding: 16px;
-  background-color: var(--color-gray-background);
-  border-radius: 12px;
+}
+
+.infoItem:not(:last-child) {
+  border-right: 2px solid var(--color-gray-light);
 }
 
 .infoLabel {
@@ -141,7 +142,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  /* gap: 12px; */
 }
 
 .statRow {
@@ -155,7 +156,8 @@
   font-size: 14px;
   line-height: 20px;
   color: var(--color-gray-medium);
-  font-weight: 500;
+  font-weight: 700;
+  text-align: right;
 }
 
 .statValue {
@@ -164,6 +166,9 @@
   color: var(--color-black);
   font-weight: 700;
   text-align: right;
+  border-left: 2px solid var(--color-gray-light);
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .statBarContainer {
