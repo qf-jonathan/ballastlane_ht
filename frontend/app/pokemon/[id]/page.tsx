@@ -11,20 +11,37 @@ export default function PokemonDetailsPage() {
   const params = useParams();
   const router = useRouter();
   const { currentPokemon, isLoading, error, fetchPokemonDetails } = usePokemonStore();
-  const { isAuthenticated, checkAuth } = useAuthStore();
+  const { isAuthenticated, checkAuth, isLoading: authLoading } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
   useEffect(() => {
-    if (params.id && isAuthenticated) {
+    // Only redirect if auth check is complete and user is not authenticated
+    if (!authLoading && !isAuthenticated) {
+      router.push("/login");
+      return;
+    }
+
+    // Fetch Pokemon only if authenticated
+    if (isAuthenticated && params.id) {
       fetchPokemonDetails(params.id as string);
     }
-  }, [params.id, fetchPokemonDetails, isAuthenticated]);
+  }, [params.id, fetchPokemonDetails, isAuthenticated, authLoading, router]);
 
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  // Don't render anything if not authenticated (redirect is happening)
   if (!isAuthenticated) {
-    router.push("/");
     return null;
   }
 
@@ -54,6 +71,7 @@ export default function PokemonDetailsPage() {
     currentPokemon.sprites?.other?.["official-artwork"]?.front_default ||
     currentPokemon.sprites?.front_default ||
     "/placeholder-pokemon.png";
+  console.log("Current Pokemon:", currentPokemon);
 
   return (
     <div className={styles.page}>

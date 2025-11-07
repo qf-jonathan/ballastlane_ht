@@ -1,17 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
-import LoginForm from "@/components/LoginForm";
 import Header from "@/components/Header";
 import PokemonGrid from "@/components/PokemonGrid";
 
 export default function Home() {
+  const router = useRouter();
   const { isAuthenticated, checkAuth, isLoading } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!isLoading && !isAuthenticated) {
+      router.push("/login");
+    }
+  }, [isAuthenticated, isLoading, router]);
 
   if (isLoading) {
     return (
@@ -22,7 +30,7 @@ export default function Home() {
   }
 
   if (!isAuthenticated) {
-    return <LoginForm />;
+    return null;
   }
 
   return (

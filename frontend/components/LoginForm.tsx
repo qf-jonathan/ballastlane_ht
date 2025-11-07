@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/authStore";
 import styles from "./LoginForm.module.css";
 
 export default function LoginForm() {
+  const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login, isLoading, error } = useAuthStore();
@@ -13,6 +15,8 @@ export default function LoginForm() {
     e.preventDefault();
     try {
       await login({ username, password });
+      // Redirect to home page after successful login
+      router.push("/");
     } catch (err) {
       // Error is handled by the store
       console.error("Login error:", err);
