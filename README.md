@@ -8,16 +8,21 @@ A full-stack Pokedex application with a FastAPI backend and Next.js frontend.
 ballastlane_ht/
 ├── backend/          # FastAPI backend
 │   ├── app/
-│   │   ├── models/   # Database models (User, Pokemon)
-│   │   ├── routes/   # API routes
-│   │   ├── services/ # Business logic
-│   │   └── schemas/  # Pydantic schemas
-│   └── seed_pokemon.py  # Script to populate Pokemon database
+│   │   ├── core/      # Configuration and settings
+│   │   ├── models/    # Database models (User, Pokemon)
+│   │   ├── routes/    # API routes
+│   │   ├── services/  # Business logic
+│   │   └── schemas/   # Pydantic schemas
+│   ├── seed_pokemon.py  # Script to populate Pokemon database
+│   └── main.py        # Application entry point
 └── frontend/         # Next.js frontend
-    └── app/
-        ├── components/    # React components
-        ├── store/         # Zustand state management
-        └── pokedex/       # Pokedex pages
+    ├── app/
+    │   ├── login/     # Login page
+    │   └── pokemon/   # Pokemon detail pages
+    ├── components/    # React components
+    ├── stores/        # Zustand state management
+    ├── lib/           # Utilities (API client)
+    └── types/         # TypeScript type definitions
 ```
 
 ## Backend Setup
@@ -59,8 +64,8 @@ ballastlane_ht/
 
 #### Pokemon Endpoints
 - `GET /api/pokemon` - Get paginated list of Pokemon
-  - Query params: `offset`, `limit`, `query` (for search)
-- `GET /api/pokemon/{name_or_id}` - Get Pokemon details
+  - Query params: `offset`, `limit`, `query` (for search), `sort_by` (id or name)
+- `GET /api/pokemon/{name_or_id}` - Get Pokemon details by name or ID
 
 #### Auth Endpoints
 - `POST /api/auth/register` - Register a new user
@@ -133,14 +138,15 @@ ballastlane_ht/
 - ✅ CORS enabled for frontend
 
 ### Frontend
-- ✅ Next.js 15 with App Router
+- ✅ Next.js 16 with App Router
 - ✅ TypeScript
-- ✅ Tailwind CSS for styling
+- ✅ CSS Modules for styling
 - ✅ Zustand for state management
-- ✅ Server-side rendering for Pokemon details
-- ✅ Client-side search and filtering
-- ✅ Responsive design
-- ✅ Image optimization with Next.js Image
+- ✅ JWT authentication with protected routes
+- ✅ Pokemon search and sorting (by ID or name)
+- ✅ Infinite scroll pagination
+- ✅ Responsive design with fixed header and search bar
+- ✅ Custom design system with Pokemon type colors
 
 ## Key Changes
 
@@ -148,19 +154,23 @@ ballastlane_ht/
 The application now uses a local SQLite database instead of making direct calls to PokeAPI:
 
 1. **Pokemon Model** (`backend/app/models/pokemon.py`):
-   - Stores Pokemon data: id, name, sprites, types, abilities, stats
+   - Stores Pokemon data: id, name, description, sprites, types, abilities, stats, height, weight
    - JSON fields for complex data structures
+   - Description field populated from pokemon-species flavor text
 
 2. **Seed Script** (`backend/seed_pokemon.py`):
    - Fetches all 1328+ Pokemon from PokeAPI
-   - Populates local database
-   - Can be re-run safely (skips existing Pokemon)
+   - Fetches Pokemon species data for descriptions
+   - Populates local database with upsert logic
+   - Can be re-run safely (updates existing Pokemon)
 
 3. **Pokemon Service** (`backend/app/services/pokemon_service.py`):
-   - All methods now query the database instead of PokeAPI
+   - Single `search_pokemon` method handles all queries (with optional query parameter)
+   - All methods query the database instead of PokeAPI
    - Faster response times
-   - Better search functionality with database queries
-   - No external API dependencies
+   - Better search functionality with database queries (by name or ID)
+   - Sorting support (by ID or name)
+   - No external API dependencies during runtime
 
 ### Frontend Integration
 The frontend now communicates exclusively with the backend API:
@@ -168,13 +178,23 @@ The frontend now communicates exclusively with the backend API:
 1. **Environment Configuration**:
    - `NEXT_PUBLIC_API_URL` points to backend API
 
-2. **Pokemon Store** (`frontend/app/store/pokemonStore.ts`):
-   - Updated to use backend API endpoints
-   - Added search functionality
+2. **State Management** (`frontend/stores/`):
+   - `pokemonStore.ts` - Pokemon list, search, sorting, and infinite scroll
+   - `authStore.ts` - JWT authentication and user management
 
 3. **Components**:
-   - Updated to use backend API for all Pokemon data
-   - Server-side rendering still works for SEO
+   - `Header` - Fixed header with user info and logout
+   - `SearchBar` - Debounced search with inset shadow styling
+   - `SortDropdown` - Sort Pokemon by ID or name
+   - `PokemonGrid` - Infinite scroll grid with fixed search controls
+   - `PokemonCard` - Card with type-based color accent and Pokemon image
+   - `TypeChip` - Color-coded Pokemon type badges
+
+4. **Design System**:
+   - Custom CSS variables for 18 Pokemon types
+   - Poppins font family
+   - Inset shadows for depth
+   - Primary red color (#DC0A2D) for borders and accents
 
 ## Development Notes
 
@@ -219,11 +239,11 @@ npm run lint
 - **HTTPX** - Async HTTP client (for initial data seeding)
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
+- **Next.js 16** - React framework with App Router
 - **TypeScript** - Type safety
-- **Tailwind CSS** - Utility-first CSS
+- **CSS Modules** - Component-scoped styling
 - **Zustand** - State management
-- **Next.js Image** - Image optimization
+- **Intersection Observer API** - Infinite scroll implementation
 
 ## License
 
