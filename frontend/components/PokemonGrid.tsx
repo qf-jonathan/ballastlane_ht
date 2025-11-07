@@ -1,0 +1,85 @@
+"use client";
+
+import { useEffect, useRef, useCallback } from "react";
+import { usePokemonStore } from "@/stores/pokemonStore";
+import PokemonCard from "./PokemonCard";
+import SearchBar from "./SearchBar";
+import styles from "./PokemonGrid.module.css";
+
+export default function PokemonGrid() {
+  const {
+    pokemonList,
+    isLoading,
+    error,
+    hasMore,
+    fetchPokemonList,
+    setSearchQuery,
+    searchQuery,
+  } = usePokemonStore();
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    fetchPokemonList(true);
+  }, [searchQuery]);
+
+  const handleSearch = useCallback(
+    (query: string) => {
+      setSearchQuery(query);
+    },
+    [setSearchQuery]
+  );
+
+  useEffect(() => {
+    if (isLoading || !hasMore) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          fetchPokemonList(false);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (loadMoreRef.current) {
+      observerRef.current.observe(loadMoreRef.current);
+    }
+
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [isLoading, hasMore, fetchPokemonList]);
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.controls}>
+        <SearchBar onSearch={handleSearch} />
+      </div>
+
+      {error && <div className={styles.error}>{error}</div>}
+
+      <div className={styles.grid}>
+        {pokemonList.map((pokemon) => (
+          <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
+        ))}
+      </div>
+
+      {isLoading && (
+        <div className={styles.loading}>
+          <div className={styles.spinner}></div>
+          <p>Loading Pokémon...</p>
+        </div>
+      )}
+
+      {!isLoading && pokemonList.length === 0 && !error && (
+        <div className={styles.empty}>No Pokémon found</div>
+      )}
+
+      {hasMore && !isLoading && <div ref={loadMoreRef} className={styles.loadMore} />}
+    </div>
+  );
+}

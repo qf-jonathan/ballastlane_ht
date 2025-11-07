@@ -1,0 +1,29 @@
+[project]
+name = "backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "argon2-cffi>=25.1.0",
+    "bcrypt>=5.0.0",
+    "email-validator>=2.3.0",
+    "fastapi>=0.121.0",
+    "httpx>=0.28.1",
+    "ipython>=9.7.0",
+    "passlib>=1.7.4",
+    "pydantic>=2.12.4",
+    "pydantic-settings>=2.11.0",
+    "pytest>=8.4.2",
+    "pytest-asyncio>=1.2.0",
+    "pytest-cov>=7.0.0",
+    "python-jose>=3.5.0",
+    "python-multipart>=0.0.20",
+    "tortoise-orm>=0.25.1",
+    "uvicorn>=0.38.0",
+]
+
+[project.scripts]
+shell = "shell:main"
+serve = "main:run_server"

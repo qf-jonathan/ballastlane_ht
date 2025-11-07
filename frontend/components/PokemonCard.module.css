@@ -1,0 +1,157 @@
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.cardInner {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: var(--shadow-2dp);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardInner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background-color: var(--color-gray-light);
+  transition: background-color 0.3s ease;
+}
+
+.cardInner[data-type="grass"]::before {
+  background-color: var(--color-grass);
+}
+
+.cardInner[data-type="fire"]::before {
+  background-color: var(--color-fire);
+}
+
+.cardInner[data-type="water"]::before {
+  background-color: var(--color-water);
+}
+
+.cardInner[data-type="bug"]::before {
+  background-color: var(--color-bug);
+}
+
+.cardInner[data-type="normal"]::before {
+  background-color: var(--color-normal);
+}
+
+.cardInner[data-type="poison"]::before {
+  background-color: var(--color-poison);
+}
+
+.cardInner[data-type="electric"]::before {
+  background-color: var(--color-electric);
+}
+
+.cardInner[data-type="ground"]::before {
+  background-color: var(--color-ground);
+}
+
+.cardInner[data-type="fairy"]::before {
+  background-color: var(--color-fairy);
+}
+
+.cardInner[data-type="fighting"]::before {
+  background-color: var(--color-fighting);
+}
+
+.cardInner[data-type="psychic"]::before {
+  background-color: var(--color-psychic);
+}
+
+.cardInner[data-type="rock"]::before {
+  background-color: var(--color-rock);
+}
+
+.cardInner[data-type="ghost"]::before {
+  background-color: var(--color-ghost);
+}
+
+.cardInner[data-type="ice"]::before {
+  background-color: var(--color-ice);
+}
+
+.cardInner[data-type="dragon"]::before {
+  background-color: var(--color-dragon);
+}
+
+.cardInner[data-type="dark"]::before {
+  background-color: var(--color-dark);
+}
+
+.cardInner[data-type="steel"]::before {
+  background-color: var(--color-steel);
+}
+
+.cardInner[data-type="flying"]::before {
+  background-color: var(--color-flying);
+}
+
+.card:hover .cardInner {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-6dp);
+}
+
+.number {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--color-gray-medium);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.imageContainer {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-gray-background);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.image {
+  width: 80%;
+  height: 80%;
+  object-fit: contain;
+}
+
+.name {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin-bottom: 8px;
+  color: var(--color-black);
+}
+
+.types {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: var(--color-gray-medium);
+}
