@@ -10,60 +10,6 @@ class PokemonService:
     """Service for managing Pokemon data from database."""
 
     @staticmethod
-    async def get_pokemon_list(
-        offset: int = 0, limit: int = 20, sort_by: str = "id"
-    ) -> PokemonListResponse:
-        """
-        Get paginated list of Pokemon from database.
-
-        Args:
-            offset: Number of Pokemon to skip
-            limit: Number of Pokemon to return
-            sort_by: Field to sort by ('id' or 'name')
-
-        Returns:
-            PokemonListResponse with paginated results
-        """
-        try:
-            # Get total count
-            total_count = await Pokemon.all().count()
-
-            # Get paginated results with sorting
-            pokemon_list = await Pokemon.all().offset(offset).limit(limit).order_by(sort_by)
-
-            # Build results
-            results = [
-                PokemonListItem(
-                    name=p.name,
-                    url=f"https://pokeapi.co/api/v2/pokemon/{p.id}/",
-                )
-                for p in pokemon_list
-            ]
-
-            # Build next/previous URLs
-            next_url = None
-            previous_url = None
-
-            if offset + limit < total_count:
-                next_url = f"offset={offset + limit}&limit={limit}"
-
-            if offset > 0:
-                prev_offset = max(0, offset - limit)
-                previous_url = f"offset={prev_offset}&limit={limit}"
-
-            return PokemonListResponse(
-                count=total_count,
-                next=next_url,
-                previous=previous_url,
-                results=results,
-            )
-        except Exception as e:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Database error: {str(e)}",
-            )
-
-    @staticmethod
     async def get_pokemon_details(name_or_id: str) -> PokemonDetails:
         """
         Get detailed information about a specific Pokemon from database.
@@ -91,6 +37,7 @@ class PokemonService:
             pokemon_data = {
                 "id": pokemon.id,
                 "name": pokemon.name,
+                "sprite": pokemon.sprite_official_artwork or pokemon.sprite_front_default,
                 "sprites": {
                     "front_default": pokemon.sprite_front_default,
                     "other": {
@@ -124,13 +71,14 @@ class PokemonService:
 
     @staticmethod
     async def search_pokemon(
-        query: str, offset: int = 0, limit: int = 20, sort_by: str = "id"
+        query: str | None = None, offset: int = 0, limit: int = 20, sort_by: str = "id"
     ) -> PokemonListResponse:
         """
         Search for Pokemon by name or ID with pagination using database.
+        If query is None or empty, returns all Pokemon.
 
         Args:
-            query: Search query (name or ID)
+            query: Optional search query (name or ID). If None/empty, returns all Pokemon
             offset: Number of results to skip
             limit: Number of results to return
             sort_by: Field to sort by ('id' or 'name')
@@ -139,6 +87,39 @@ class PokemonService:
             PokemonListResponse with filtered and paginated results
         """
         try:
+            # If no query provided, return all Pokemon (same as get_pokemon_list)
+            if not query:
+                total_count = await Pokemon.all().count()
+                pokemon_list = await Pokemon.all().offset(offset).limit(limit).order_by(sort_by)
+
+                results = [
+                    PokemonListItem(
+                        id=p.id,
+                        name=p.name,
+                        url=f"/pokemon/{p.id}",
+                        sprite=p.sprite_front_default,
+                        types=p.types,
+                    )
+                    for p in pokemon_list
+                ]
+
+                next_url = None
+                previous_url = None
+
+                if offset + limit < total_count:
+                    next_url = f"offset={offset + limit}&limit={limit}"
+
+                if offset > 0:
+                    prev_offset = max(0, offset - limit)
+                    previous_url = f"offset={prev_offset}&limit={limit}"
+
+                return PokemonListResponse(
+                    count=total_count,
+                    next=next_url,
+                    previous=previous_url,
+                    results=results,
+                )
+
             # If query is numeric, try direct ID lookup first
             if query.isdigit():
                 try:
@@ -149,8 +130,12 @@ class PokemonService:
                         previous=None,
                         results=[
                             PokemonListItem(
+                                id=pokemon.id,
                                 name=pokemon.name,
-                                url=f"https://pokeapi.co/api/v2/pokemon/{pokemon.id}/",
+                                url=f"/pokemon/{pokemon.id}",
+                                sprite=pokemon.sprites.other.official_artwork.front_default
+                                or pokemon.sprites.front_default,
+                                types=[t.type.name for t in pokemon.types],
                             )
                         ],
                     )
@@ -175,8 +160,11 @@ class PokemonService:
             # Build results
             results = [
                 PokemonListItem(
+                    id=p.id,
                     name=p.name,
-                    url=f"https://pokeapi.co/api/v2/pokemon/{p.id}/",
+                    url=f"/pokemon/{p.id}",
+                    sprite=p.sprite_front_default,
+                    types=p.types,
                 )
                 for p in matching_pokemon
             ]

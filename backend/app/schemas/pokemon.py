@@ -6,8 +6,11 @@ from pydantic import BaseModel
 class PokemonListItem(BaseModel):
     """Schema for Pokemon in list view."""
 
+    id: int
     name: str
     url: str
+    sprite: str | None
+    types: List[str]
 
 
 class PokemonListResponse(BaseModel):
@@ -86,6 +89,7 @@ class PokemonDetails(BaseModel):
 
     id: int
     name: str
+    sprite: str | None  # Primary sprite (same as list view)
     sprites: PokemonSprites
     types: List[PokemonTypeSlot]
     height: int

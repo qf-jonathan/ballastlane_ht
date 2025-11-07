@@ -31,12 +31,8 @@ async def get_pokemon_list(
     Returns:
         Paginated list of Pokemon with name and URL
     """
-    if query:
-        return await PokemonService.search_pokemon(
-            query=query, offset=offset, limit=limit, sort_by=sort_by
-        )
-    return await PokemonService.get_pokemon_list(
-        offset=offset, limit=limit, sort_by=sort_by
+    return await PokemonService.search_pokemon(
+        query=query, offset=offset, limit=limit, sort_by=sort_by
     )
 
 

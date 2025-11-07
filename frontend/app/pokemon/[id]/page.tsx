@@ -20,7 +20,7 @@ export default function PokemonDetailsPage() {
   useEffect(() => {
     // Only redirect if auth check is complete and user is not authenticated
     if (!authLoading && !isAuthenticated) {
-      router.push("/login");
+      // router.push("/login");
       return;
     }
 
@@ -67,11 +67,8 @@ export default function PokemonDetailsPage() {
 
   const primaryType = currentPokemon.types[0]?.type.name;
   const typeColorVar = `--color-${primaryType}`;
-  const imageUrl =
-    currentPokemon.sprites?.other?.["official-artwork"]?.front_default ||
-    currentPokemon.sprites?.front_default ||
-    "/placeholder-pokemon.png";
-  console.log("Current Pokemon:", currentPokemon);
+  // Use the same sprite as list view
+  const imageUrl = currentPokemon.sprite || "/placeholder-pokemon.png";
 
   return (
     <div className={styles.page}>

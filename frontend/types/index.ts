@@ -41,8 +41,11 @@ export type PokemonType =
   | "water";
 
 export interface PokemonListItem {
+  id: number;
   name: string;
   url: string;
+  sprite: string | null;
+  types: string[];
 }
 
 export interface PokemonListResponse {
@@ -91,6 +94,7 @@ export interface PokemonStat {
 export interface PokemonDetails {
   id: number;
   name: string;
+  sprite: string | null;
   height: number;
   weight: number;
   sprites: PokemonSprites;

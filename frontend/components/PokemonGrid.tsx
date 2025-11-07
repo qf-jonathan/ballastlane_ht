@@ -75,7 +75,7 @@ export default function PokemonGrid() {
 
       <div className={styles.grid}>
         {pokemonList.map((pokemon) => (
-          <PokemonCard key={pokemon.name} name={pokemon.name} url={pokemon.url} />
+          <PokemonCard key={pokemon.id} pokemon={pokemon} />
         ))}
       </div>
 
